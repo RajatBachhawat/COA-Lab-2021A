@@ -20,7 +20,7 @@ module rippleCarryAdder_4bit_tb;
   reg[3:0] expected_sum;
   reg expected_carryOut;
   
-  rippleCarryAdder_4bit_tb rca(.a(a), .b(b), .carryIn(carryIn), .sum(sum), .carryOut(carryOut));
+  rippleCarryAdder_4bit rca(.a(a), .b(b), .carryIn(carryIn), .sum(sum), .carryOut(carryOut));
   
   initial
     begin

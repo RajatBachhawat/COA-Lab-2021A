@@ -24,15 +24,15 @@ module rippleCarryAdder_64bit_tb;
   
   initial
     begin
-      $monitor ($time, "a=%d b=%d carrIn=%b sum=%b (%d) expected_sum=%b (%d) carryOut=%b expected_carryOut=%b", a, b, carryIn, sum, sum, expected_sum, expected_sum, carryOut, expected_carryOut);
-      #10 carryIn = 0; a = 56000000000000; b = 39000000000000; expected_sum = 95000000000000; expected_carryOut = 0;
-      #10 carryIn = 0; a = 15300000000000; b = 10200000000000; expected_sum = 25500000000000; expected_carryOut = 0;
-      #10 carryIn = 0; a = 1; b = 100000000000000; expected_sum = 100000000000001; expected_carryOut = 0;
-      #10 carryIn = 0; a = 17900000000000; b = 2300000000000; expected_sum = 20200000000000; expected_carryOut = 0;
-      #10 carryIn = 0; a = 20000; b = 30000; expected_sum = 50000; expected_carryOut = 0;
-      #10 carryIn = 0; a = 41467295; b = 4253500000; expected_sum = 4294967295; expected_carryOut = 0;
-      #10 carryIn = 0; a = 4294967294; b = 3; expected_sum = 4294967297; expected_carryOut = 0;
-      #10 carryIn = 0; a = 18446744073709551615; b = 1; expected_sum = 0; expected_carryOut = 1;
+      $monitor ($time, "\na=%d b=%d carryIn=%b\nsum=%b (%d) expected_sum=%b (%d)\ncarryOut=%b expected_carryOut=%b", a, b, carryIn, sum, sum, expected_sum, expected_sum, carryOut, expected_carryOut);
+      #10 carryIn = 0; a = 64'd56000000000000; b = 64'd39000000000000; expected_sum = 64'd95000000000000; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd15300000000000; b = 64'd10200000000000; expected_sum = 64'd25500000000000; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd1; b = 64'd100000000000000; expected_sum = 64'd100000000000001; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd17900000000000; b = 64'd2300000000000; expected_sum = 64'd20200000000000; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd20000; b = 64'd30000; expected_sum = 64'd50000; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd41467295; b = 64'd4253500000; expected_sum = 64'd4294967295; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd4294967294; b = 64'd3; expected_sum = 64'd4294967297; expected_carryOut = 0;
+      #10 carryIn = 0; a = 64'd18446744073709551615; b = 64'd1; expected_sum = 64'd0; expected_carryOut = 1;
       #10 $finish;
 	end
 endmodule // rippleCarryAdder_64bit_tb

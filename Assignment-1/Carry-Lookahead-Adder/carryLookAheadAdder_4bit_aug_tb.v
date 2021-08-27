@@ -20,6 +20,7 @@ module carryLookAheadAdder_4bit_aug_tb;
   reg carryIn;
   reg [3:0] expected_sum;
   reg expected_P_block, expected_G_block;
+  reg expected_carryOut;
   
   carryLookAheadAdder_4bit_aug cla(.a(a), .b(b), .carryIn(carryIn), .sum(sum), .P_block(P_block), .G_block(G_block));
   assign carryOut = G_block | (P_block & carryIn);

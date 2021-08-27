@@ -24,7 +24,7 @@ module rippleCarryAdder_32bit_tb;
   
   initial
     begin
-      $monitor ($time, "a=%d b=%d carrIn=%b sum=%b (%d) expected_sum=%b (%d) carryOut=%b expected_carryOut=%b", a, b, carryIn, sum, sum, expected_sum, expected_sum, carryOut, expected_carryOut);
+      $monitor ($time, "\na=%d b=%d carryIn=%b\nsum=%b (%d) expected_sum=%b (%d)\ncarryOut=%b expected_carryOut=%b", a, b, carryIn, sum, sum, expected_sum, expected_sum, carryOut, expected_carryOut);
       #10 carryIn = 0; a = 560000000; b = 390000000; expected_sum = 950000000; expected_carryOut = 0;
       #10 carryIn = 0; a = 153000000; b = 102000000; expected_sum = 255000000; expected_carryOut = 0;
       #10 carryIn = 0; a = 1; b = 1000000000; expected_sum = 1000000001; expected_carryOut = 0;
