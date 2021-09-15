@@ -28,6 +28,9 @@ newline:
 #   b:   $s1
 #   product: $s2
 
+# **WE HAVE HANDLED THE CASE WHERE INPUTS CAN BE -32768 SEPARATELY, AND IT GIVES THE CORRECT OUTPUT
+# HENCE WE ARE NOT FLAGGING THIS CASE
+
 main:
 
 first_inp:
@@ -75,14 +78,14 @@ preprocess:
    j multiply_booth
 
 swap:
-    beq $a1,$t2,load                # when both numbers are -2^15
-    move $t6,$a1                    # swapping
+    beq $a1,$t2,load                # to handle the case when both numbers are -2^15
+    move $t6,$a1                    # swapping when the multiplicand is -2^15 to prevent overflow
     move $a1,$a0
     move $a0,$t6 
     j preprocess
 
 load:
-    li $v0,1                        # exceptional case when bboth are -2^15
+    li $v0,1                        # exceptional case when both are -2^15
     sll $v0,$v0,30
     j print
 
