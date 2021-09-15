@@ -55,9 +55,9 @@ first_inp:
 
 loop: 
    
-   li		$v0, 5		        # $v0 = 5
-   syscall
-   sw   $v0,0($s0)
+   li		$v0, 5
+   syscall                      # syscall for taking integer input
+   sw   $v0,0($s0)              # taking array input
    addi $s0,$s0,4
    addi $t0,$t0,1
    blt  $t0,10,loop
@@ -65,27 +65,29 @@ loop:
 
 find_k_largest:
 
-   li		$v0, 4		        # $v0 = 4
+   li		$v0, 4
    la		$a0, newline	    # load address of newline string
-   syscall
+   syscall                      # syscall for printing string
 
-   la $a0,number_prompt2           #  ask for the  input
+   la $a0,number_prompt2           #  ask for the input k
    li $v0,4
    syscall
 
-   li		$v0, 5		        # $v0 = 5
-   syscall
+   li		$v0, 5
+   syscall                      # inputting k
 
-   blt $v0,1,Error_Exit
+   blt $v0,1,Error_Exit       #sanity checks
    bgt $v0,10,Error_Exit
 
    move $s0,$v0
+   li   $t0,10
+   sub  $s0,$t0,$s0            # k = 10 - k (for getting k-th from right end)
 
    la $a0,array                 #address in first argument
    li $a1,10                  #length of array in second argument
    jal sort_array
 
-   li		$v0, 4		        # $v0 = 4
+   li		$v0, 4
    la		$a0, print_msg	    # load address of message string
    syscall
 
@@ -98,33 +100,35 @@ loop2:
    li		$v0, 1		        
    syscall
 
-   li		$v0, 4		        # $v0 = 4   
+   li		$v0, 4   
    la		$a0, space	    # load address of newline string
    syscall
 
-   addi $t1,$t1,4
-   addi $t0,$t0,1
-   blt  $t0,10,loop2
+   addi $t1,$t1,4        # updating array pointer
+   addi $t0,$t0,1        # updating loop variable
+   blt  $t0,10,loop2     # checking if more can be printed
 
 print_kth:
    
-   addi $t0,$s0,-1      # t0 = k-1
-   sll  $t0,$t0,2       # t0 = 4*(k-1)
+   addi $t0,$s0,0       # t0 = k
+   sll  $t0,$t0,2       # t0 = 4*k
    la   $t1,array       # t1 = array
-   add  $t0,$t1,$t0     # t0 = array + 4*(k-1)
-   lw   $t0,0($t0)      # t0 = array[k-1]
+   add  $t0,$t1,$t0     # t0 = array + 4*k
+   lw   $t0,0($t0)      # t0 = array[k]
 
     la      $a0, out_msg          # load address of print message in $a0
     li		$v0, 4  	        	   
     syscall                       # print message
 
     move    $a0,$t0                 
-    li      $v0, 1                  # $v0 = 1
+    li      $v0, 1
     syscall                         # syscall to print integer
 
    j Exit
 
 sort_array:
+    # $a0 = base address of array
+    # $a1 = length of array
     addi $sp,$sp,-8
     sw   $s0,4($sp)
     sw   $ra,0($sp)
@@ -168,12 +172,6 @@ outer_for_cont:
     lw   $s0,4($sp)
     addi $sp,$sp,8
     jr $ra
-
-# print: 
-
-
-#     j Exit
-
 
 Exit:
     la      $a0, exit_msg          # load address of err message in $a0

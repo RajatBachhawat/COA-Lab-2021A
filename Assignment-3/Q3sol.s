@@ -8,13 +8,15 @@
 .data
 # program output text constants
 inp_prompt:
-    .asciiz "Enter four positive integers m, n, a, r:  "
+    .asciiz "Enter four positive integers m, n, a, r:\n"
 matrixA_msg:
     .asciiz "\nMatrix A:\n"
 matrixB_msg:
     .asciiz "\nMatrix B (Transpose of Matrix A):\n"
 exit_msg: 
     .asciiz "\nExitted."
+error_msg:
+    .asciiz "Input integers must all be positive. Try again.\n"
 space:
     .asciiz " "
 newline:
@@ -34,23 +36,36 @@ newline:
 main:
     jal     initStack           # initialise stack pointer and frame pointer
 
+inputs:
     la      $a0, inp_prompt     # load address of input prompt in $a0
     li      $v0, 4
     syscall                     # syscall to print input prompt
 
     li      $v0, 5              
     syscall                     # syscall to take integer input m
+    slti    $t0, $v0, 1         # sanity check for > 0
+    bne     $t0, $zero, Error_Exit
     move    $s0, $v0            # $s0 = m
+
     li      $v0, 5
     syscall                     # syscall to take integer input n
+    slti    $t0, $v0, 1         # sanity check for > 0
+    bne     $t0, $zero, Error_Exit
     move    $s1, $v0            # $s1 = n
+
     li      $v0, 5
     syscall                     # syscall to take integer input a
+    slti    $t0, $v0, 1         # sanity check for > 0
+    bne     $t0, $zero, Error_Exit
     move    $s2, $v0            # $s2 = a
+
     li      $v0, 5
     syscall                     # syscall to take integer input r
+    slti    $t0, $v0, 1         # sanity check for > 0
+    bne     $t0, $zero, Error_Exit
     move    $s3, $v0            # $s3 = r       
 
+logic:
     mul     $t3, $s0, $s1       # $t0 = m * n = n * m [$t0 stores size of matrix] 
 
     ### DEMO OF MALLOCINSTACK ###
@@ -201,3 +216,9 @@ Exit:
     syscall                         # print exit message
     li		$v0, 10		            
     syscall                         # syscall to exit from the program
+
+Error_Exit:
+    la      $a0, error_msg          # load address of err message in $a0
+    li		$v0, 4	        	   
+    syscall                         # print error message
+    j       main                    # re-input
