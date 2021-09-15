@@ -53,6 +53,7 @@ main:
 
     mul     $t3, $s0, $s1       # $t0 = m * n = n * m [$t0 stores size of matrix] 
 
+    ### DEMO OF MALLOCINSTACK ###
     move    $a0, $t3
     jal     mallocInStack       # allocate memory in the stack for A
     move    $s4, $v0            # $s4 = first address of A
@@ -94,15 +95,19 @@ main:
     j		Exit				# jump to Exit
     
 initStack:                      # procedure for initialising the stack pointer & frame pointer
-    addi    $sp, $sp, -4
-    sw		$fp, 0($sp)
-    move 	$fp, $sp
+    move    $t0, $ra            # save return address
+    move 	$a0, $fp
+    ### DEMO OF PUSHTOSTACK ###
+    jal     pushToStack         # pushing the old frame pointer into the stack to save it
+    move 	$ra, $t0            # restore return address
+
+    move 	$fp, $sp            # current frame pointer = current stack pointer
     j       $ra
 
 pushToStack:                    # procedure for pushing to stack
     # $a0 = data to be pushed to stack
-    addi    $sp, $sp, -4
-    sw		$a0, 0($sp)
+    addi    $sp, $sp, -4        # create 4-byte space in stack
+    sw		$a0, 0($sp)         # store the argument in stack
     j		$ra
 
 mallocInStack:                  # procedure for allocating required memory in the stack
