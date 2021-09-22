@@ -30,7 +30,12 @@ length:
 
 
 main:
-    jal initStack
+    move $t0, $ra
+    jal initStack                  # initialise stack pointer and frame pointer
+    move $ra, $t0
+
+    move $a0, $ra
+    jal pushToStack                # save the return address on the stack
 
 first_inp:  
 
@@ -69,8 +74,11 @@ Exit:
     la      $a0, exit_msg          # load address of err message in $a0
     li		$v0, 4	        	   
     syscall                         # print exit message
-    li		$v0, 10		            
-    syscall                         # syscall to exit from the program
+    
+    lw $ra, -4($fp)                 # restore the return address from the stack
+    lw $fp, 0($fp)                  # restore the old frame pointer from the stack
+    addi $sp, $sp, 8                # restore the stack to its old state
+    jr $ra                          # return from main
 
 Error_Exit:
     la      $a0, error_msg          # load address of err message in $a0
@@ -118,11 +126,14 @@ swap:
     jr $ra
 
 initStack:
-# initialises the stack pointer
-    addi    $sp, $sp, -4
-    sw		$fp, 0($sp)
-    move 	$fp, $sp		    # $fp = $sp
-    jr      $ra
+# initialises the stack pointer and frame pointer
+    move    $t2, $ra            # save return address
+    move 	$a0, $fp
+    jal     pushToStack         # pushing the old frame pointer into the stack to save it
+    move 	$ra, $t2            # restore return address
+
+    move 	$fp, $sp            # current frame pointer = current stack pointer
+    j       $ra
 
 pushToStack:
 # $a0 is input
@@ -247,10 +258,10 @@ outer_loop_end:
 
 return_from_sort:
 
-    lw $s2,-4($fp)
+    lw $s0,-4($fp)  # restore callee saved registers
     lw $s1,-8($fp)
     lw $s2,-12($fp)
-    lw $a0,-16($fp)  # restoring arguments after call
+    lw $a0,-16($fp)  # restore arguments after call
     lw $a1,-20($fp)
     lw $a2,-24($fp)
     lw $ra,-28($fp)

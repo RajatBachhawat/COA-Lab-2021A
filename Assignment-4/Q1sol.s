@@ -30,7 +30,12 @@ answer:
 # program variables
 
 main:
+    move    $t1, $ra
     jal     initStack           # initialise stack pointer and frame pointer
+    move    $ra, $t1
+
+    move    $a0, $ra
+    jal     pushToStack         # save return address on the stack
 
     la      $a0, inp_prompt     # load address of input prompt in $a0
     li      $v0, 4
@@ -56,6 +61,9 @@ main:
     slti    $t0, $v0, 1         # sanity check for > 0
     bne     $t0, $zero, Error_Exit
     move    $s4, $v0            # $s4 = m     
+
+    div		$s2, $s4 
+    mfhi	$s2                 # r = r % m    
 
     mul     $t3, $s0, $s0       # $t0 = n * n = n * n [$t0 stores size of matrix] 
 
@@ -96,11 +104,22 @@ main:
     syscall                     # syscall to print the answer, i.e., determinant of input matrix
 
     mul     $t0, $s0, $s0
+    sll     $t0, $t0, 2
     add     $sp, $sp, $t0       # de-allocate the matrix A from stack
+
+    jal     popFromStack        # restore return address from the stack
+    move    $ra, $v0
+    move    $t0, $ra
+
     jal     popFromStack        # restore the old frame pointer
     move    $fp, $v0
 
-    j		Exit				# jump to Exit
+    la      $a0, exit_msg       # load address of err message in $a0
+    li		$v0, 4	        	   
+    syscall                     # print exit message
+
+    move    $ra, $t0
+    jr		$ra                 # return from main
     
 initStack:                      # procedure for initialising the stack pointer & frame pointer
     move    $t0, $ra            # save return address
@@ -316,13 +335,6 @@ restore_Det:
 
 return:
     jr      $ra
-
-Exit:
-    la      $a0, exit_msg           # load address of err message in $a0
-    li		$v0, 4	        	   
-    syscall                         # print exit message
-    li		$v0, 10		            
-    syscall                         # syscall to exit from the program
 
 Error_Exit:
     la      $a0, error_msg          # load address of err message in $a0

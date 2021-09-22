@@ -38,7 +38,12 @@ length:
 
 
 main:
-    jal initStack
+    move $t0, $ra
+    jal initStack                  # initialise stack pointer and frame pointer
+    move $ra, $t0
+
+    move $a0, $ra
+    jal pushToStack                # save the return address on the stack
 
 first_inp:  
 
@@ -125,8 +130,11 @@ Exit:
     la      $a0, exit_msg          # load address of err message in $a0
     li		$v0, 4	        	   
     syscall                         # print exit message
-    li		$v0, 10		            
-    syscall                         # syscall to exit from the program
+    
+    lw $ra, -4($fp)                 # restore the return address from the stack
+    lw $fp, 0($fp)                  # restore the old frame pointer from the stack
+    addi $sp, $sp, 8                # restore the stack to its old state
+    jr $ra                          # return from main
 
 printArray:
     # prints the array elements
@@ -169,11 +177,14 @@ swap:
     jr $ra
 
 initStack:
-    # initialises the stack pointer
-    addi    $sp, $sp, -4
-    sw		$fp, 0($sp)
-    move 	$fp, $sp		    # $fp = $sp
-    jr      $ra
+    # initialises the stack pointer and frame pointer
+    move    $t2, $ra            # save return address
+    move 	$a0, $fp
+    jal     pushToStack         # pushing the old frame pointer into the stack to save it
+    move 	$ra, $t2            # restore return address
+
+    move 	$fp, $sp            # current frame pointer = current stack pointer
+    j       $ra
 
 pushToStack:
     # $a0 is input
