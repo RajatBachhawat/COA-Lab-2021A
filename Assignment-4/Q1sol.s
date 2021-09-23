@@ -37,6 +37,7 @@ main:
     move    $a0, $ra
     jal     pushToStack         # save return address on the stack
 
+input:
     la      $a0, inp_prompt     # load address of input prompt in $a0
     li      $v0, 4
     syscall                     # syscall to print input prompt
@@ -62,6 +63,7 @@ main:
     bne     $t0, $zero, Error_Exit
     move    $s4, $v0            # $s4 = m     
 
+logic:
     div		$s2, $s4 
     mfhi	$s2                 # r = r % m    
 
@@ -340,4 +342,4 @@ Error_Exit:
     la      $a0, error_msg          # load address of err message in $a0
     li		$v0, 4	        	   
     syscall                         # print error message
-    j       main                    # re-input
+    j       input                   # re-input
