@@ -1,5 +1,5 @@
 /*
- * Assignment     : 7
+ * Assignment     : KGPRISC
  * Semester       : Autumn 2021 
  * Group          : 46
  * Name1          : Neha Dalmia
@@ -23,7 +23,7 @@ module instruction_decoder(
         label <= 32'b0;
         imm <= 32'b0;
         case(instruction[31:29])
-            3'b000: begin
+            3'b000: begin                           // R-Format
                 opcode <= instruction[31:29];
                 rs <= instruction[28:24];
                 rt <= instruction[23:19];
@@ -31,7 +31,7 @@ module instruction_decoder(
                 imm[4:0] <= instruction[18:14];
                 func_code <= instruction[13:10];
             end
-            3'b001: begin
+            3'b001: begin                           // I-Format
                 opcode <= instruction[31:29];
                 rs <= instruction[28:24];
                 rt <= 5'bx;
@@ -39,7 +39,7 @@ module instruction_decoder(
                 imm[19:0] <= instruction[23:4];
                 func_code <= instruction[3:0];
             end
-            3'b010: 
+            3'b010:                                 // Load/Store
             begin
                 opcode <= instruction[31:29];
                 rs <= instruction[28:24];
@@ -48,9 +48,9 @@ module instruction_decoder(
                 imm[17:0] <= instruction[18:1];
                 func_code <= instruction[0:0];
             end
-            3'b011:
+            3'b011:                                 // B1-Format
             begin
-                if(func_code == 4'b0001) begin
+                if(func_code == 4'b0001) begin      // bl (Branch and Link Instruction)
                     opcode <= instruction[31:29];
                     rs <= 5'b00000;
                     rt <= 5'b11111;
@@ -68,14 +68,14 @@ module instruction_decoder(
                     func_code <= instruction[3:0];
                 end
             end
-            3'b100:
+            3'b100:                                 // B2-Format
             begin
                 opcode <= instruction[31:29];
                 rs <= instruction[28:24];
                 rt <= 5'bx;
                 func_code <= instruction[23:20];
             end
-            3'b101:
+            3'b101:                                 // B3-Format
             begin
                 opcode <= instruction[31:29];
                 rs <= instruction[28:24];

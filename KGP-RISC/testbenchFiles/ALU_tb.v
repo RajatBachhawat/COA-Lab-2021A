@@ -16,7 +16,6 @@ module ALU_tb;
 	wire carryFlag;
 	wire zeroFlag;
 	wire signFlag;
-	wire c32;
 
 	// Instantiate the Unit Under Test (UUT)
 	ALU uut (
@@ -28,8 +27,7 @@ module ALU_tb;
 		.out(out), 
 		.carryFlag(carryFlag), 
 		.zeroFlag(zeroFlag), 
-		.signFlag(signFlag),
-		.c32(c32)
+		.signFlag(signFlag)
 	);
 
 	initial begin
@@ -98,6 +96,6 @@ module ALU_tb;
 		$finish;
 	end
 	always #5 clk = ~clk;
-	always #10 $monitor($time,"ns -> clk = %b, inp1=%d inp2=%d, out=%d, carry=%d, c32=%d, zero=%d,sign=%d",clk,inp1,inp2,out,carryFlag,c32,zeroFlag,signFlag);
+	always #10 $monitor($time,"ns -> clk = %b, inp1=%d inp2=%d, out=%d, carry=%d, zero=%d,sign=%d",clk,inp1,inp2,out,carryFlag,zeroFlag,signFlag);
       
 endmodule

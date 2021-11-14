@@ -1,5 +1,14 @@
+/*
+ * Assignment     : KGPRISC
+ * Semester       : Autumn 2021 
+ * Group          : 46
+ * Name1          : Neha Dalmia
+ * RollNumber1    : 19CS30055
+ * Name2          : Rajat Bachhawat
+ * RollNumber2    : 19CS10073
+ */
+
 `timescale 1ns / 1ps
-//ALU: To perform arithmetic and shift operations
 
 module ALU(
     input [31:0] inp1,
@@ -10,19 +19,18 @@ module ALU(
     output reg [31:0] out,
     output reg carryFlag,
     output reg zeroFlag,
-    output reg signFlag,
-	output reg c32
+    output reg signFlag
     );
 
-reg c31;
+reg c31,c32;
 // Sequential block for remembering carry
 always @(posedge clk or posedge reset) begin
-	if(reset) begin
-		carryFlag <= 1'b0;
-	end
-	else if(operation == 4'b0000) begin
-		carryFlag <= c32;
-	end
+	 if(reset) begin
+		  carryFlag <= 1'b0;
+	 end
+	 else if(operation == 4'b0000) begin
+		  carryFlag <= c32;
+	 end
 end
 
 // Combinational block for ALU Logic
