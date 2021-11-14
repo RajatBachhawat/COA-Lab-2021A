@@ -1,7 +1,5 @@
-`timescale 1ns / 1ps
-
 /*
- * Assignment     : 7
+ * Assignment     : KGPRISC
  * Semester       : Autumn 2021 
  * Group          : 46
  * Name1          : Neha Dalmia
